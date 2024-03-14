@@ -11,7 +11,7 @@ export const ThreeContainer = () => {
       </div>
       <div className="flex flex-col md:flex-row justify-evenly mt-9">
         <div className="flex flex-col items-center">
-          <div className="w-64 h-64 p-5 bg-[#B2FFFF] rounded-3xl flex flex-col justify-between">
+          <div className="w-64 h-64 p-5 bg-[#B2FFFF] rounded-3xl flex flex-col justify-between mt-4">
             <p className="font-light text-sm">Simplicité</p>
             <Image
               src="/assets/timer.png"
@@ -26,7 +26,7 @@ export const ThreeContainer = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <div className="w-64 h-64 p-5 bg-[#F5F5F5] rounded-3xl flex flex-col justify-between">
+          <div className="w-64 h-64 p-5 bg-[#F5F5F5] rounded-3xl flex flex-col justify-between mt-4">
             <p className="font-light text-sm">Rapidité</p>
             <Image
               src="/assets/truck.png"
@@ -41,7 +41,7 @@ export const ThreeContainer = () => {
           </div>
         </div>
         <div className="flex flex-col items-center">
-          <div className="w-64 h-64 p-5 bg-[#EFDECD] rounded-3xl flex flex-col justify-between">
+          <div className="w-64 h-64 p-5 bg-[#EFDECD] rounded-3xl flex flex-col justify-between mt-4">
             <p className="font-light text-sm">Fiabilité</p>
             <Image
               src="/assets/safe.png"

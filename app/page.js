@@ -1,4 +1,5 @@
 "use client";
+import { AboutSwipp } from "@/components/AboutSwipp";
 import Header from "@/components/Header";
 import { PhoneMockup } from "@/components/PhoneMockup";
 import { ThreeContainer } from "@/components/ThreeContainer";
@@ -9,6 +10,7 @@ export default function Home() {
       <Header />
       <PhoneMockup />
       <ThreeContainer />
+      <AboutSwipp />
     </div>
   );
 }

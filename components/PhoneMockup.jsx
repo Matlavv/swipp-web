@@ -24,7 +24,7 @@ export const PhoneMockup = () => {
           <button className="px-3 py-1.5 flex gap-2 items-center rounded-xl outline outline-2">
             <div className="w-10">
               <Image
-                src="https://www.svgrepo.com/show/394180/google-play.svg"
+                src="/assets/google-play.svg"
                 alt="Get it on Google Play"
                 width={40}
                 height={40}
