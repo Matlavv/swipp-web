@@ -3,15 +3,10 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "Swipp",
-  description: "Swipp is a car repair app",
-};
-
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <div lang="en">
+      <div className={inter.className}>{children}</div>
+    </div>
   );
 }

@@ -28,7 +28,6 @@ export const PhoneMockup = () => {
                 alt="Get it on Google Play"
                 width={40}
                 height={40}
-                layout="fixed"
               />
             </div>
             <div>
