@@ -1,11 +1,10 @@
-import { ArrowUpRight, Users } from "lucide-react";
-import Link from "next/link";
-
 import LastReservations from "@/components/Dashboard/LastReservations";
 import UpcomingReservations from "@/components/Dashboard/UpcomingReservations";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowUpRight, Users } from "lucide-react";
+import Link from "next/link";
 
 export default function GarageDashboard() {
   return (

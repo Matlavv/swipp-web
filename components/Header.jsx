@@ -8,7 +8,9 @@ export default function Header() {
 
   return (
     <header className="flex items-center justify-between w-full p-8">
-      <Image src="/assets/swipp.png" alt="logo" width={150} height={100} />
+      <Link href="/">
+        <Image src="/assets/swipp.png" alt="logo" width={150} height={100} />
+      </Link>
 
       {/* Bouton Hamburger */}
       <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>

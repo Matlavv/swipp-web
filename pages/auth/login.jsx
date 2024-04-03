@@ -1,8 +1,19 @@
+import Header from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Header from "../../components/Header";
 import { auth, db } from "../../utils/firebaseConfig";
 
 export default function Login() {
@@ -41,26 +52,48 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <div className="flex min-h-screen w-full flex-col">
       <Header />
-      <form onSubmit={handleSubmit} className="mt-20">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-          className="mt-10 bg-slate-500 rounded-full px-4 py-2 w-80 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out hover:bg-slate-600"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Mot de passe"
-          required
-        />
-        <button type="submit">Connexion</button>
-      </form>
+      <div className="flex items-center justify-center">
+        <Card className="w-full max-w-sm">
+          <form onSubmit={handleSubmit}>
+            <CardHeader>
+              <CardTitle className="text-2xl">Connexion</CardTitle>
+              <CardDescription>
+                Connectez vous à votre compte Swipp
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="m@example.com"
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Mot de passe</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" className="w-full bg-[#34469C]">
+                Sign in
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
     </div>
   );
 }
