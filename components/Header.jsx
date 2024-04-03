@@ -1,10 +1,12 @@
 "use client";
+import { useAuth } from "@/utils/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { currentUser } = useAuth();
 
   return (
     <header className="flex items-center justify-between w-full p-8">
@@ -36,9 +38,15 @@ export default function Header() {
           <li className="md:mr-10">
             <Link href="/JoinUsForm">Nous rejoindre</Link>
           </li>
-          <li>
-            <Link href="/auth/Login">Connexion</Link>
-          </li>
+          {currentUser ? (
+            <li>
+              <Link href="/Garages/GarageDashboard">Dashboard</Link>
+            </li>
+          ) : (
+            <li>
+              <Link href="/auth/Login">Connexion</Link>
+            </li>
+          )}
         </ul>
       </nav>
     </header>
