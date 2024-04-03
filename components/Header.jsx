@@ -32,10 +32,10 @@ export default function Header() {
       <nav className={`md:flex ${isMenuOpen ? "block" : "hidden"}`}>
         <ul className="flex flex-col md:flex-row font-semibold">
           <li className="md:mr-10">
-            <Link href="/joinUsForm">Nous rejoindre</Link>
+            <Link href="/JoinUsForm">Nous rejoindre</Link>
           </li>
           <li>
-            <Link href="/auth/login">Connexion</Link>
+            <Link href="/auth/Login">Connexion</Link>
           </li>
         </ul>
       </nav>

@@ -11,7 +11,7 @@ export const ThreeContainer = () => {
       </div>
       <div className="flex flex-col md:flex-row justify-evenly mt-9">
         <div className="flex flex-col items-center">
-          <div className="w-64 h-64 p-5 bg-[#B2FFFF] rounded-3xl flex flex-col justify-between mt-4">
+          <div className="w-64 h-64 p-5 bg-[#43B3AE] rounded-3xl flex flex-col justify-between mt-4">
             <p className="font-light text-sm">Simplicité</p>
             <Image
               src="/assets/timer.png"
