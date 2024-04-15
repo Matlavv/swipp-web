@@ -1,7 +1,77 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/utils/AuthContext";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "../../utils/firebaseConfig";
 
 const UpcomingReservations = () => {
+  const [reservations, setReservations] = useState([]);
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (currentUser?.uid) {
+      fetchReservations(currentUser.uid);
+    }
+  }, [currentUser]);
+
+  const fetchReservations = async (garageId) => {
+    const reservationsRef = collection(db, "RepairBookings");
+    const q = query(
+      reservationsRef,
+      where("garageId", "==", garageId),
+      where("isActive", "==", true),
+      orderBy("bookingDate", "asc"),
+      limit(6)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const reservationsWithDetails = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const reservation = doc.data();
+        const userDetails = await fetchUserDetails(reservation.userId);
+        return {
+          ...reservation,
+          id: doc.id,
+          userEmail: userDetails.email,
+          username: userDetails.username,
+          displayName: userDetails.firstName
+            ? `${userDetails.firstName} ${userDetails.lastName}`
+            : userDetails.username,
+          bookingDateString: formatDate(reservation.bookingDate),
+        };
+      })
+    );
+
+    setReservations(reservationsWithDetails);
+  };
+
+  const fetchUserDetails = async (userId) => {
+    const userRef = doc(db, "users", userId);
+    const userSnap = await getDoc(userRef);
+    return userSnap.exists()
+      ? userSnap.data()
+      : { username: "Unknown", email: "No email" };
+  };
+
+  const formatDate = (timestamp) => {
+    return timestamp.toDate().toLocaleString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div>
       <Card>
@@ -9,69 +79,21 @@ const UpcomingReservations = () => {
           <CardTitle>Réservations à venir</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-8">
-          <div className="flex items-center gap-4">
-            <Avatar className="hidden h-9 w-9 sm:flex">
-              <AvatarImage src="/avatars/01.png" alt="Avatar" />
-              <AvatarFallback>M</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="text-sm font-medium leading-none">Matlav</p>
-              <p className="text-sm text-muted-foreground">matlav@gmail.com</p>
+          {reservations.map((reservation) => (
+            <div key={reservation.id} className="flex items-center gap-4">
+              <div className="grid gap-1">
+                <p className="text-sm font-medium leading-none">
+                  {reservation.displayName || reservation.username}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {reservation.userEmail}
+                </p>
+              </div>
+              <div className="ml-auto font-medium">
+                {reservation.bookingDateString}
+              </div>
             </div>
-            <div className="ml-auto font-medium">2023-06-26</div>
-          </div>
-          <div className="flex items-center gap-4">
-            <Avatar className="hidden h-9 w-9 sm:flex">
-              <AvatarImage src="/avatars/02.png" alt="Avatar" />
-              <AvatarFallback>J</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="text-sm font-medium leading-none">Jackson Lee</p>
-              <p className="text-sm text-muted-foreground">
-                jackson.lee@email.com
-              </p>
-            </div>
-            <div className="ml-auto font-medium">2023-06-26</div>
-          </div>
-          <div className="flex items-center gap-4">
-            <Avatar className="hidden h-9 w-9 sm:flex">
-              <AvatarImage src="/avatars/03.png" alt="Avatar" />
-              <AvatarFallback>I</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="text-sm font-medium leading-none">
-                Isabella Nguyen
-              </p>
-              <p className="text-sm text-muted-foreground">
-                isabella.nguyen@email.com
-              </p>
-            </div>
-            <div className="ml-auto font-medium">2023-06-26</div>
-          </div>
-          <div className="flex items-center gap-4">
-            <Avatar className="hidden h-9 w-9 sm:flex">
-              <AvatarImage src="/avatars/04.png" alt="Avatar" />
-              <AvatarFallback>W</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="text-sm font-medium leading-none">William Kim</p>
-              <p className="text-sm text-muted-foreground">will@email.com</p>
-            </div>
-            <div className="ml-auto font-medium">2023-06-26</div>
-          </div>
-          <div className="flex items-center gap-4">
-            <Avatar className="hidden h-9 w-9 sm:flex">
-              <AvatarImage src="/avatars/05.png" alt="Avatar" />
-              <AvatarFallback>S</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <p className="text-sm font-medium leading-none">Sofia Davis</p>
-              <p className="text-sm text-muted-foreground">
-                sofia.davis@email.com
-              </p>
-            </div>
-            <div className="ml-auto font-medium">2023-06-26</div>
-          </div>
+          ))}
         </CardContent>
       </Card>
     </div>

@@ -1,6 +1,3 @@
-import { ArrowUpRight } from "lucide-react";
-import Link from "next/link";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +15,103 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/utils/AuthContext";
+import {
+  collection,
+  doc,
+  getDoc,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { db } from "../../utils/firebaseConfig";
 
 const LastReservations = () => {
+  const [reservations, setReservations] = useState([]);
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchReservations();
+    }
+  }, [currentUser]);
+
+  const fetchReservations = () => {
+    const garageId = currentUser.uid;
+    const q = query(
+      collection(db, "RepairBookings"),
+      where("garageId", "==", garageId),
+      orderBy("bookingDate", "desc"),
+      limit(5)
+    );
+
+    return onSnapshot(q, async (querySnapshot) => {
+      const reservationsWithIds = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      // Extract userIds and fetch user details
+      const userIds = reservationsWithIds.map((res) => res.userId);
+      const userDetails = await fetchUsersDetails(userIds);
+
+      // Map user details back to reservations
+      const reservationsWithUser = reservationsWithIds.map((reservation) => ({
+        ...reservation,
+        userDisplayName:
+          userDetails[reservation.userId]?.trim() || "Utilisateur inconnu",
+      }));
+
+      setReservations(reservationsWithUser);
+    });
+  };
+
+  const fetchUsersDetails = async (userIds) => {
+    const uniqueUserIds = Array.from(new Set(userIds));
+    const userDetails = {};
+
+    await Promise.all(
+      uniqueUserIds.map(async (userId) => {
+        try {
+          const userRef = doc(db, "users", userId);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            const { firstName, lastName, username } = userSnap.data();
+            userDetails[userId] =
+              `${firstName || ""} ${lastName || ""}`.trim() || username;
+          } else {
+            console.log(`No user found for ID: ${userId}`);
+            userDetails[userId] = "Utilisateur inconnu"; // Handling non-existent user
+          }
+        } catch (error) {
+          console.error("Error fetching user details:", error);
+          userDetails[userId] = "Utilisateur inconnu"; // Error handling
+        }
+      })
+    );
+
+    return userDetails;
+  };
+
+  const formatDate = (timestamp) => {
+    if (!timestamp) return "";
+
+    const date = timestamp.toDate();
+    return date.toLocaleString("fr-FR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
+
   return (
     <div>
       <Card className="xl:col-span-2">
@@ -42,93 +134,29 @@ const LastReservations = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>Nom</TableHead>
-                <TableHead className="">Type</TableHead>
-                <TableHead className="">Status</TableHead>
-                <TableHead className="">Date</TableHead>
-                <TableHead className="">Prix</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Prix</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium">Liam Johnson</div>
-                </TableCell>
-                <TableCell className="">Réparation</TableCell>
-                <TableCell className="">
-                  <Badge
-                    className="text-xs text-green-600 border-green-600"
-                    variant="outline"
-                  >
-                    Passée
-                  </Badge>
-                </TableCell>
-                <TableCell className="">2023-06-23</TableCell>
-                <TableCell className="">$250.00</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium">Olivia Smith</div>
-                </TableCell>
-                <TableCell className="">Contrôle Technique</TableCell>
-                <TableCell className="">
-                  <Badge
-                    className="text-xs text-red-800 border-red-800"
-                    variant="outline"
-                  >
-                    Annulée
-                  </Badge>
-                </TableCell>
-                <TableCell className="">2023-06-24</TableCell>
-                <TableCell className="">$150.00</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium">Noah Williams</div>
-                </TableCell>
-                <TableCell className="">Entretien</TableCell>
-                <TableCell className="">
-                  <Badge
-                    className="text-xs text-green-600 border-green-600"
-                    variant="outline"
-                  >
-                    Passée
-                  </Badge>
-                </TableCell>
-                <TableCell className="">2023-06-25</TableCell>
-                <TableCell className="">$350.00</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium">Emma Brown</div>
-                </TableCell>
-                <TableCell className="">Réparation</TableCell>
-                <TableCell className="">
-                  <Badge
-                    className="text-xs text-orange-500 border-orange-500"
-                    variant="outline"
-                  >
-                    En attente
-                  </Badge>
-                </TableCell>
-                <TableCell className="">2023-06-26</TableCell>
-                <TableCell className="">$450.00</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>
-                  <div className="font-medium">Liam Johnson</div>
-                </TableCell>
-                <TableCell className="">Entretien</TableCell>
-                <TableCell className="">
-                  <Badge
-                    className="text-xs text-orange-500 border-orange-500"
-                    variant="outline"
-                  >
-                    En attente
-                  </Badge>
-                </TableCell>
-                <TableCell className="">2023-06-27</TableCell>
-                <TableCell className="">$550.00</TableCell>
-              </TableRow>
+              {reservations.map((reservation) => (
+                <TableRow key={reservation.id}>
+                  <TableCell>{reservation.userDisplayName}</TableCell>
+                  <TableCell>{reservation.reparationDetail}</TableCell>
+                  <TableCell>
+                    <Badge
+                      className={`text-xs ${reservation.statusColor} border-${reservation.statusColor}`}
+                      variant="outline"
+                    >
+                      {reservation.isActive ? "Active" : "Terminée"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{formatDate(reservation.bookingDate)}</TableCell>
+                  <TableCell>{`${reservation.price}€`}</TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>

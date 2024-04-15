@@ -40,7 +40,7 @@ export default function Header() {
           </li>
           {currentUser ? (
             <li>
-              <Link href="/Garages/GarageDashboard">Dashboard</Link>
+              <Link href="/Garages/GarageDashboard">Espace Pro</Link>
             </li>
           ) : (
             <li>

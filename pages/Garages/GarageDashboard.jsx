@@ -3,8 +3,10 @@ import UpcomingReservations from "@/components/Dashboard/UpcomingReservations";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAuth, signOut } from "firebase/auth";
 import { ArrowUpRight, Users } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function GarageDashboard() {
   return (
@@ -28,7 +30,11 @@ export default function GarageDashboard() {
               <CardTitle className="text-sm font-medium">
                 Modifier les informations de votre garage
               </CardTitle>
-              <Button asChild size="sm" className="ml-auto gap-1 bg-[#34469C]">
+              <Button
+                asChild
+                size="sm"
+                className="ml-auto gap-1 bg-[#34469C] p-2"
+              >
                 <Link href="/Garages/UpdateGarageForm">
                   Modifier
                   <ArrowUpRight className="h-4 w-4" />
