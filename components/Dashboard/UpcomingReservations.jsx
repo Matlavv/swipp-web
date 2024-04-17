@@ -12,6 +12,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
   orderBy,
   query,
   where,
@@ -37,7 +38,8 @@ const UpcomingReservations = () => {
       reservationsRef,
       where("garageId", "==", garageId),
       where("isActive", "==", true),
-      orderBy("bookingDate", "asc")
+      orderBy("bookingDate", "asc"),
+      limit(8)
     );
 
     const querySnapshot = await getDocs(q);

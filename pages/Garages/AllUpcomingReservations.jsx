@@ -51,6 +51,7 @@ const AllUpcomingReservations = () => {
             ? `${userDetails.firstName} ${userDetails.lastName}`
             : userDetails.username || "Unknown",
           bookingDateString: formatDate(reservationData.bookingDate.toDate()),
+          price: reservationData.price, // Ensure the price is retrieved and stored
         };
       })
     );
@@ -91,6 +92,7 @@ const AllUpcomingReservations = () => {
                 <TableHead>Nom du Client</TableHead>
                 <TableHead>Type de Réparation</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead>Prix</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -99,6 +101,10 @@ const AllUpcomingReservations = () => {
                   <TableCell>{reservation.userDisplayName}</TableCell>
                   <TableCell>{reservation.reparationDetail}</TableCell>
                   <TableCell>{reservation.bookingDateString}</TableCell>
+                  <TableCell>
+                    {reservation.price ? `${reservation.price} €` : "N/A"}
+                  </TableCell>{" "}
+                  {/* Display the price */}
                 </TableRow>
               ))}
             </TableBody>

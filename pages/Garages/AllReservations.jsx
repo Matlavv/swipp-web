@@ -38,7 +38,7 @@ const AllReservations = () => {
     const q = query(
       collection(db, "RepairBookings"),
       where("garageId", "==", garageId),
-      orderBy("bookingDate", "asc")
+      orderBy("bookingDate", "desc") // Change "asc" to "desc" here
     );
 
     const querySnapshot = await getDocs(q);

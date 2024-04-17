@@ -26,6 +26,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
@@ -127,6 +128,7 @@ const LastReservations = () => {
           <Button asChild size="sm" className="ml-auto gap-1 bg-[#34469C]">
             <Link href="/Garages/AllReservations" passHref>
               Voir tout
+              <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>
         </CardHeader>
@@ -149,21 +151,24 @@ const LastReservations = () => {
                 >
                   <TableCell>
                     <Link
-                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
                     >
                       {reservation.userDisplayName}
                     </Link>
                   </TableCell>
                   <TableCell>
                     <Link
-                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
                     >
                       {reservation.reparationDetail}
                     </Link>
                   </TableCell>
                   <TableCell>
                     <Link
-                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
                     >
                       <Badge
                         className={getStatusBadgeClasses(reservation.state)}
@@ -175,14 +180,16 @@ const LastReservations = () => {
                   </TableCell>
                   <TableCell>
                     <Link
-                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
                     >
                       {formatDate(reservation.bookingDate)}
                     </Link>
                   </TableCell>
                   <TableCell>
                     <Link
-                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
                     >{`${reservation.price}€`}</Link>
                   </TableCell>
                 </TableRow>
