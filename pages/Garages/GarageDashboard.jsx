@@ -3,12 +3,33 @@ import UpcomingReservations from "@/components/Dashboard/UpcomingReservations";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getAuth, signOut } from "firebase/auth";
+import { useAuth } from "@/utils/AuthContext";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { ArrowUpRight, Users } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { db } from "../../utils/firebaseConfig";
 
 export default function GarageDashboard() {
+  const [totalReservations, setTotalReservations] = useState(0);
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    const fetchTotalReservations = async () => {
+      if (currentUser?.uid) {
+        const reservationsRef = collection(db, "RepairBookings");
+        const q = query(
+          reservationsRef,
+          where("garageId", "==", currentUser.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        setTotalReservations(querySnapshot.size);
+      }
+    };
+
+    fetchTotalReservations();
+  }, [currentUser]);
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
@@ -17,12 +38,12 @@ export default function GarageDashboard() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Nouveaux clients
+                Total des réservations
               </CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2300</div>
+              <div className="text-2xl font-bold">{totalReservations}</div>
             </CardContent>
           </Card>
           <Card>

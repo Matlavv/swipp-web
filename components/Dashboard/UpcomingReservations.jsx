@@ -1,15 +1,23 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useAuth } from "@/utils/AuthContext";
 import {
   collection,
   doc,
   getDoc,
   getDocs,
-  limit,
   orderBy,
   query,
   where,
 } from "firebase/firestore";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
 
@@ -29,29 +37,30 @@ const UpcomingReservations = () => {
       reservationsRef,
       where("garageId", "==", garageId),
       where("isActive", "==", true),
-      orderBy("bookingDate", "asc"),
-      limit(6)
+      orderBy("bookingDate", "asc")
     );
 
     const querySnapshot = await getDocs(q);
     const reservationsWithDetails = await Promise.all(
       querySnapshot.docs.map(async (doc) => {
         const reservation = doc.data();
-        const userDetails = await fetchUserDetails(reservation.userId);
-        return {
-          ...reservation,
-          id: doc.id,
-          userEmail: userDetails.email,
-          username: userDetails.username,
-          displayName: userDetails.firstName
-            ? `${userDetails.firstName} ${userDetails.lastName}`
-            : userDetails.username,
-          bookingDateString: formatDate(reservation.bookingDate),
-        };
+        if (new Date(reservation.bookingDate.seconds * 1000) > new Date()) {
+          const userDetails = await fetchUserDetails(reservation.userId);
+          return {
+            ...reservation,
+            id: doc.id,
+            userEmail: userDetails.email,
+            username: userDetails.username,
+            displayName: userDetails.firstName
+              ? `${userDetails.firstName} ${userDetails.lastName}`
+              : userDetails.username,
+            bookingDateString: formatDate(reservation.bookingDate),
+          };
+        }
       })
     );
 
-    setReservations(reservationsWithDetails);
+    setReservations(reservationsWithDetails.filter(Boolean)); // Remove undefined entries caused by past dates
   };
 
   const fetchUserDetails = async (userId) => {
@@ -75,8 +84,19 @@ const UpcomingReservations = () => {
   return (
     <div>
       <Card>
-        <CardHeader>
-          <CardTitle>Réservations à venir</CardTitle>
+        <CardHeader className="flex flex-row items-center">
+          <div className="grid gap-2">
+            <CardTitle>Réservations à venir</CardTitle>
+            <CardDescription>
+              Les prochaines réservations à venir
+            </CardDescription>
+          </div>
+          <Button asChild size="sm" className="ml-auto gap-1 bg-[#34469C]">
+            <Link href="/Garages/AllUpcomingReservations">
+              Voir tout
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </CardHeader>
         <CardContent className="grid gap-8">
           {reservations.map((reservation) => (

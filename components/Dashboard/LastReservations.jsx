@@ -26,7 +26,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
@@ -56,11 +55,9 @@ const LastReservations = () => {
         ...doc.data(),
       }));
 
-      // Extract userIds and fetch user details
       const userIds = reservationsWithIds.map((res) => res.userId);
       const userDetails = await fetchUsersDetails(userIds);
 
-      // Map user details back to reservations
       const reservationsWithUser = reservationsWithIds.map((reservation) => ({
         ...reservation,
         userDisplayName:
@@ -72,35 +69,25 @@ const LastReservations = () => {
   };
 
   const fetchUsersDetails = async (userIds) => {
-    const uniqueUserIds = Array.from(new Set(userIds));
     const userDetails = {};
-
     await Promise.all(
-      uniqueUserIds.map(async (userId) => {
-        try {
-          const userRef = doc(db, "users", userId);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            const { firstName, lastName, username } = userSnap.data();
-            userDetails[userId] =
-              `${firstName || ""} ${lastName || ""}`.trim() || username;
-          } else {
-            console.log(`No user found for ID: ${userId}`);
-            userDetails[userId] = "Utilisateur inconnu"; // Handling non-existent user
-          }
-        } catch (error) {
-          console.error("Error fetching user details:", error);
-          userDetails[userId] = "Utilisateur inconnu"; // Error handling
+      userIds.map(async (userId) => {
+        const userRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          const { firstName, lastName, username } = userSnap.data();
+          userDetails[userId] =
+            `${firstName || ""} ${lastName || ""}`.trim() || username;
+        } else {
+          userDetails[userId] = "Utilisateur inconnu";
         }
       })
     );
-
     return userDetails;
   };
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "";
-
     const date = timestamp.toDate();
     return date.toLocaleString("fr-FR", {
       day: "2-digit",
@@ -110,6 +97,21 @@ const LastReservations = () => {
       minute: "2-digit",
       second: "2-digit",
     });
+  };
+
+  const getStatusBadgeClasses = (state) => {
+    switch (state) {
+      case "Active":
+        return "text-green-600 border-green-600";
+      case "Terminée":
+        return "text-gray-500 border-gray-500";
+      case "En attente":
+        return "text-yellow-600 border-yellow-600";
+      case "Annulée":
+        return "text-red-600 border-red-600";
+      default:
+        return "text-gray-400 border-gray-400";
+    }
   };
 
   return (
@@ -123,9 +125,8 @@ const LastReservations = () => {
             </CardDescription>
           </div>
           <Button asChild size="sm" className="ml-auto gap-1 bg-[#34469C]">
-            <Link href="#">
+            <Link href="/Garages/AllReservations" passHref>
               Voir tout
-              <ArrowUpRight className="h-4 w-4" />
             </Link>
           </Button>
         </CardHeader>
@@ -142,19 +143,48 @@ const LastReservations = () => {
             </TableHeader>
             <TableBody>
               {reservations.map((reservation) => (
-                <TableRow key={reservation.id}>
-                  <TableCell>{reservation.userDisplayName}</TableCell>
-                  <TableCell>{reservation.reparationDetail}</TableCell>
+                <TableRow
+                  key={reservation.id}
+                  className="cursor-pointer hover:bg-gray-100"
+                >
                   <TableCell>
-                    <Badge
-                      className={`text-xs ${reservation.statusColor} border-${reservation.statusColor}`}
-                      variant="outline"
+                    <Link
+                      href={`/Garages/DetailledReservation/${reservation.id}`}
                     >
-                      {reservation.isActive ? "Active" : "Terminée"}
-                    </Badge>
+                      {reservation.userDisplayName}
+                    </Link>
                   </TableCell>
-                  <TableCell>{formatDate(reservation.bookingDate)}</TableCell>
-                  <TableCell>{`${reservation.price}€`}</TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                    >
+                      {reservation.reparationDetail}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                    >
+                      <Badge
+                        className={getStatusBadgeClasses(reservation.state)}
+                        variant="outline"
+                      >
+                        {reservation.state}
+                      </Badge>
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                    >
+                      {formatDate(reservation.bookingDate)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/Garages/DetailledReservation/${reservation.id}`}
+                    >{`${reservation.price}€`}</Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
