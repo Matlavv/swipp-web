@@ -18,6 +18,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
 
@@ -98,13 +99,38 @@ const AllUpcomingReservations = () => {
             <TableBody>
               {reservations.map((reservation) => (
                 <TableRow key={reservation.id}>
-                  <TableCell>{reservation.userDisplayName}</TableCell>
-                  <TableCell>{reservation.reparationDetail}</TableCell>
-                  <TableCell>{reservation.bookingDateString}</TableCell>
                   <TableCell>
-                    {reservation.price ? `${reservation.price} €` : "N/A"}
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.userDisplayName}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.reparationDetail}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.bookingDateString}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.price ? `${reservation.price} €` : "N/A"}
+                    </Link>
                   </TableCell>{" "}
-                  {/* Display the price */}
                 </TableRow>
               ))}
             </TableBody>

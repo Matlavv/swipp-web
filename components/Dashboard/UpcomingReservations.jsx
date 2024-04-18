@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useAuth } from "@/utils/AuthContext";
 import {
   collection,
@@ -17,7 +18,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
@@ -86,36 +86,49 @@ const UpcomingReservations = () => {
   return (
     <div>
       <Card>
-        <CardHeader className="flex flex-row items-center">
-          <div className="grid gap-2">
-            <CardTitle>Réservations à venir</CardTitle>
-            <CardDescription>
-              Les prochaines réservations à venir
-            </CardDescription>
-          </div>
-          <Button asChild size="sm" className="ml-auto gap-1 bg-[#34469C]">
-            <Link href="/Garages/AllUpcomingReservations">
-              Voir tout
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Button>
+        <CardHeader>
+          <CardTitle>Réservations à venir</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-8">
-          {reservations.map((reservation) => (
-            <div key={reservation.id} className="flex items-center gap-4">
-              <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">
-                  {reservation.displayName || reservation.username}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {reservation.userEmail}
-                </p>
-              </div>
-              <div className="ml-auto font-medium">
-                {reservation.bookingDateString}
-              </div>
-            </div>
-          ))}
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nom du Client</TableHead>
+                <TableHead>Email du Client</TableHead>
+                <TableHead>Date de Réservation</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {reservations.map((reservation) => (
+                <TableRow key={reservation.id}>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.displayName || reservation.username}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.userEmail}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.bookingDateString}
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

@@ -19,6 +19,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
 
@@ -38,7 +39,7 @@ const AllReservations = () => {
     const q = query(
       collection(db, "RepairBookings"),
       where("garageId", "==", garageId),
-      orderBy("bookingDate", "desc") // Change "asc" to "desc" here
+      orderBy("bookingDate", "desc")
     );
 
     const querySnapshot = await getDocs(q);
@@ -132,9 +133,21 @@ const AllReservations = () => {
               {reservations.map((reservation) => (
                 <TableRow key={reservation.id}>
                   <TableCell>
-                    {reservation.userDisplayName || "Inconnu"}
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.userDisplayName || "Inconnu"}
+                    </Link>
                   </TableCell>
-                  <TableCell>{reservation.reparationDetail}</TableCell>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {reservation.reparationDetail}
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     <select
                       value={editStates[reservation.id] || reservation.state}
@@ -150,11 +163,23 @@ const AllReservations = () => {
                     </select>
                   </TableCell>
                   <TableCell>
-                    {new Date(
-                      reservation.bookingDate.seconds * 1000
-                    ).toLocaleString("fr-FR")}
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {new Date(
+                        reservation.bookingDate.seconds * 1000
+                      ).toLocaleString("fr-FR")}
+                    </Link>
                   </TableCell>
-                  <TableCell>{`${reservation.price} €`}</TableCell>
+                  <TableCell>
+                    <Link
+                      key={reservation.id}
+                      href={`/Garages/reservations/${reservation.id}`}
+                    >
+                      {`${reservation.price} €`}
+                    </Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
