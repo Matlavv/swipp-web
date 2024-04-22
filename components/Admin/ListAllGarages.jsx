@@ -36,7 +36,9 @@ const ListAllGarages = () => {
             <TableRow>
               <TableHead>Nom</TableHead>
               <TableHead>Ville</TableHead>
+              <TableHead>Departement</TableHead>
               <TableHead>Adresse</TableHead>
+              <TableHead>Description</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -44,7 +46,9 @@ const ListAllGarages = () => {
               <TableRow key={garage.id}>
                 <TableCell>{garage.name}</TableCell>
                 <TableCell>{garage.city}</TableCell>
+                <TableCell>{garage.department}</TableCell>
                 <TableCell>{garage.address}</TableCell>
+                <TableCell>{garage.description}</TableCell>
               </TableRow>
             ))}
           </TableBody>

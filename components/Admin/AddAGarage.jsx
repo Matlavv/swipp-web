@@ -57,7 +57,7 @@ const AddAGarage = () => {
   };
 
   return (
-    <div className="border-2 rounded-xl p-6">
+    <div className="border-2 rounded-xl p-6 pb-8">
       <h1 className="text-center">Ajouter un garage</h1>
       <Input
         type="text"
