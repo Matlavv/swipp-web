@@ -105,15 +105,20 @@ export default function UpdateGarageForm() {
   }, [currentUser]);
 
   // Fonction pour gérer la soumission du formulaire
+  // Fonction pour gérer la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Convertir la ville et le département en minuscules
+    const formattedCity = city.toLowerCase();
+    const formattedDepartment = department.toLowerCase();
 
     // Vérification que tous les champs ont été remplis
     if (
       !name ||
       !address ||
-      !city ||
-      !department ||
+      !formattedCity ||
+      !formattedDepartment ||
       !description ||
       workerCount < 1
     ) {
@@ -151,8 +156,8 @@ export default function UpdateGarageForm() {
           {
             name,
             address,
-            city,
-            department,
+            city: formattedCity, // Sauvegarde en minuscules
+            department: formattedDepartment, // Sauvegarde en minuscules
             description,
             workerCount,
             services,
@@ -161,14 +166,14 @@ export default function UpdateGarageForm() {
           },
           { merge: true }
         );
+
         alert("Modifications enregistrées avec succès !");
       } catch (error) {
-        console.log(currentUser);
-        alert("Erreur lors de la sauvegarde des informations du garage");
         console.error(
           "Erreur lors de la sauvegarde des informations du garage :",
           error
         );
+        alert("Erreur lors de la sauvegarde des informations du garage");
       }
     }
   };
