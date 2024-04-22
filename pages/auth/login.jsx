@@ -14,10 +14,10 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore"; // Import getDoc for fetching user data
+import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { auth, db } from "../../utils/firebaseConfig"; // Ensure db is properly imported
+import { auth, db } from "../../utils/firebaseConfig";
 
 export default function Login() {
   const [email, setEmail] = useState("");

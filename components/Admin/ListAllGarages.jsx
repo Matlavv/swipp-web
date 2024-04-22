@@ -26,7 +26,7 @@ const ListAllGarages = () => {
   }, []);
 
   return (
-    <Card className="w-full">
+    <Card className="w-full border-2">
       <CardHeader>
         <CardTitle>Liste des Garages</CardTitle>
       </CardHeader>

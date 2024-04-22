@@ -1,5 +1,5 @@
 import { useAuth } from "@/utils/AuthContext";
-import { db } from "@/utils/firebaseConfig"; // Assurez-vous que le chemin d'accès est correct
+import { db } from "@/utils/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";

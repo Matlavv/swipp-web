@@ -1,5 +1,6 @@
 import AddAGarage from "@/components/Admin/AddAGarage";
 import ListAllGarages from "@/components/Admin/ListAllGarages";
+import ListAllReservations from "@/components/Admin/ListAllReservations";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/utils/firebaseConfig";
@@ -22,12 +23,18 @@ const AdminDashboard = () => {
   return (
     <div className="flex flex-col items-center min-h-screen w-full">
       <Header />
-      <h1 className="text-2xl font-bold mt-6">Dashboard Administrateur</h1>
-      <div className="flex justify-start items-start w-full px-10">
-        {/* AddAGarage component aligned to the left */}
-        <AddAGarage />
+      <div className="w-full px-4 sm:px-10 flex flex-col md:flex-row gap-4 md:gap-10">
+        {/* Responsive section for AddAGarage and ListAllReservations */}
+        <div className="flex flex-col md:flex-row w-full gap-10">
+          <div className="md:w-1/4 w-full">
+            <AddAGarage />
+          </div>
+          <div className="md:w-full w-full">
+            <ListAllReservations />
+          </div>
+        </div>
       </div>
-      <div className="w-full px-10 mt-4">
+      <div className="w-full px-4 sm:px-10 mt-4">
         <ListAllGarages />
       </div>
       <Button
