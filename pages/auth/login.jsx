@@ -10,11 +10,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore"; // Import getDoc for fetching user data
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { auth, db } from "../../utils/firebaseConfig";
+import { auth, db } from "../../utils/firebaseConfig"; // Ensure db is properly imported
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,15 +35,18 @@ export default function Login() {
       const user = userCredential.user;
 
       // Récupérer le document de l'utilisateur pour obtenir son rôle
-      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userDocRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
-        const { role } = userDoc.data();
+        const userData = userDoc.data();
 
         // Rediriger l'utilisateur selon son rôle
-        if (role === "garage") {
+        if (userData.role === "admin") {
+          router.push("/Admin/AdminDashboard");
+        } else if (userData.role === "garage") {
           router.push("/Garages/GarageDashboard");
         } else {
-          router.push("/test"); // Redirection par défaut pour les autres rôles
+          router.push("/dashboard"); // Redirection par défaut pour les autres rôles
         }
       } else {
         console.log("Aucun document utilisateur trouvé");
@@ -48,6 +54,25 @@ export default function Login() {
       }
     } catch (error) {
       alert("Erreur de connexion: " + error.message);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!email) {
+      alert(
+        "Veuillez entrer votre adresse email pour réinitialiser votre mot de passe."
+      );
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert(
+        "Email de réinitialisation envoyé. Vérifiez votre boîte de réception."
+      );
+    } catch (error) {
+      alert(
+        "Erreur lors de la réinitialisation du mot de passe: " + error.message
+      );
     }
   };
 
@@ -60,7 +85,7 @@ export default function Login() {
             <CardHeader>
               <CardTitle className="text-2xl">Connexion</CardTitle>
               <CardDescription>
-                Connectez vous à votre compte Swipp
+                Connectez-vous à votre compte Swipp
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -87,9 +112,17 @@ export default function Login() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" className="w-full bg-[#34469C]">
-                Sign in
-              </Button>
+              <div className="flex flex-col items-center w-full">
+                <Button type="submit" className="w-full bg-[#34469C] mb-4">
+                  Se connecter
+                </Button>
+                <p
+                  onClick={handleResetPassword}
+                  className="text-sm text-blue-500 hover:underline cursor-pointer"
+                >
+                  Mot de passe oublié ?
+                </p>
+              </div>
             </CardFooter>
           </form>
         </Card>
