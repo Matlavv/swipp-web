@@ -1,4 +1,5 @@
 import { collection, onSnapshot, query } from "firebase/firestore";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -43,12 +44,35 @@ const ListAllGarages = () => {
           </TableHeader>
           <TableBody>
             {garages.map((garage) => (
-              <TableRow key={garage.id}>
-                <TableCell>{garage.name}</TableCell>
-                <TableCell>{garage.city}</TableCell>
-                <TableCell>{garage.department}</TableCell>
-                <TableCell>{garage.address}</TableCell>
-                <TableCell>{garage.description}</TableCell>
+              <TableRow
+                key={garage.id}
+                className="hover:bg-gray-100 cursor-pointer"
+              >
+                <TableCell>
+                  <Link href={`/Admin/garages/${garage.id}`}>
+                    {garage.name}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link href={`/Admin/garages/${garage.id}`}>
+                    {garage.city}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link href={`/Admin/garages/${garage.id}`}>
+                    {garage.department}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link href={`/Admin/garages/${garage.id}`}>
+                    {garage.address}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link href={`/Admin/garages/${garage.id}`}>
+                    {garage.description}
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

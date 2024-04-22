@@ -39,6 +39,7 @@ const AddAGarage = () => {
         createdAt: Timestamp.now(),
         profileImageUrl: defaultProfileImgUrl,
         role: "garage",
+        isActive: true,
       });
 
       // Réinitialisation des champs
