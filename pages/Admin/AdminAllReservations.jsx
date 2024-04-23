@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { db } from "../../utils/firebaseConfig";
 
@@ -21,7 +22,7 @@ const AdminAllReservations = () => {
         collection(db, "RepairBookings"),
         orderBy("bookingDate", "desc")
       );
-      return onSnapshot(q, (querySnapshot) => {
+      onSnapshot(q, (querySnapshot) => {
         const reservationList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -66,15 +67,40 @@ const AdminAllReservations = () => {
             </TableHeader>
             <TableBody>
               {reservations.map((reservation) => (
-                <TableRow key={reservation.id}>
+                <TableRow
+                  key={reservation.id}
+                  className="hover:bg-gray-100 cursor-pointer"
+                >
                   <TableCell>
-                    {`${reservation.firstName} ${reservation.lastName}`}
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {`${reservation.firstName} ${reservation.lastName}`}
+                    </Link>
                   </TableCell>
-                  <TableCell>{reservation.reparationType}</TableCell>
-                  <TableCell>{reservation.reparationDetail}</TableCell>
-                  <TableCell>{reservation.state}</TableCell>
-                  <TableCell>{formatDate(reservation.bookingDate)}</TableCell>
-                  <TableCell>{`${reservation.price} €`}</TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {reservation.reparationType}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {reservation.reparationDetail}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {reservation.state}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {formatDate(reservation.bookingDate)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {`${reservation.price} €`}
+                    </Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

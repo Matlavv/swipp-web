@@ -95,12 +95,37 @@ const ListAllReservations = () => {
                   key={reservation.id}
                   className="cursor-pointer hover:bg-gray-100"
                 >
-                  <TableCell>{`${reservation.firstName} ${reservation.lastName}`}</TableCell>
-                  <TableCell>{formatDate(reservation.bookingDate)}</TableCell>
-                  <TableCell>{reservation.reparationType}</TableCell>
-                  <TableCell>{reservation.state}</TableCell>
-                  <TableCell>{`${reservation.price} €`}</TableCell>
-                  <TableCell>{reservation.location}</TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {" "}
+                      {`${reservation.firstName} ${reservation.lastName}`}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {formatDate(reservation.bookingDate)}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {reservation.reparationType}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {reservation.state}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/Admin/reservations/${reservation.id}`}
+                    >{`${reservation.price} €`}</Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/Admin/reservations/${reservation.id}`}>
+                      {reservation.location}
+                    </Link>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

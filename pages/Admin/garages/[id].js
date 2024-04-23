@@ -1,110 +1,112 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import Header from "@/components/Header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../../../utils/firebaseConfig";
 
-const GaragesDetails = () => {
-  const router = useRouter();
-  const { garageId } = router.query;
+const GarageDetails = () => {
   const [garage, setGarage] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
+  const { id } = router.query;
 
   useEffect(() => {
-    if (!garageId) return;
-
     const fetchGarage = async () => {
-      const docRef = doc(db, "garages", garageId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setGarage({ id: docSnap.id, ...docSnap.data() });
-        setLoading(false);
-      } else {
-        console.error("No such garage!");
-        setLoading(false);
+      if (id) {
+        const garageRef = doc(db, "garages", id);
+        const docSnap = await getDoc(garageRef);
+        if (docSnap.exists()) {
+          setGarage(docSnap.data());
+        } else {
+          console.log("Garage not found");
+        }
       }
     };
 
     fetchGarage();
-  }, [garageId]);
+  }, [id]);
 
-  const handleUpdate = async () => {
-    if (!garage) return;
-    const docRef = doc(db, "garages", garageId);
-    try {
-      await updateDoc(docRef, garage);
-      setIsEditing(false);
-      alert("Garage updated successfully!");
-    } catch (error) {
-      console.error("Error updating garage:", error);
-      alert("Failed to update garage.");
+  // Fonction pour changer le statut isActive
+  const handleActiveStatusChange = async (event) => {
+    const newIsActive = event.target.value === "Actif";
+    if (garage.isActive !== newIsActive) {
+      try {
+        await updateDoc(doc(db, "garages", id), {
+          isActive: newIsActive,
+        });
+        setGarage({ ...garage, isActive: newIsActive });
+        alert("Le statut du garage a été modifié !");
+      } catch (error) {
+        console.error("Erreur lors de la modification du statut :", error);
+        alert("Échec de la modification du statut !");
+      }
     }
   };
 
-  const handleDelete = async () => {
-    const docRef = doc(db, "garages", garageId);
-    try {
-      await deleteDoc(docRef);
-      alert("Garage deleted successfully!");
-      router.push("/Admin/AdminDashboard");
-    } catch (error) {
-      console.error("Error deleting garage:", error);
-      alert("Failed to delete garage.");
+  // Fonction pour supprimer un garage
+  const deleteGarage = async () => {
+    const confirmDelete = confirm(
+      "Êtes-vous sûr de vouloir supprimer ce garage ?"
+    );
+    if (confirmDelete) {
+      try {
+        await deleteDoc(doc(db, "garages", id));
+        router.push("/Admin/AdminDashboard"); // Redirection après suppression
+      } catch (error) {
+        console.error("Erreur lors de la suppression :", error);
+        alert("Échec de la suppression du garage !");
+      }
     }
   };
 
-  const toggleVisibility = async () => {
-    if (!garage) return;
-    const docRef = doc(db, "garages", garageId);
-    try {
-      await updateDoc(docRef, { isVisible: !garage.isVisible });
-      setGarage((prev) => ({ ...prev, isVisible: !prev.isVisible }));
-    } catch (error) {
-      console.error("Error toggling visibility:", error);
-      alert("Failed to toggle visibility.");
-    }
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setGarage((prev) => ({ ...prev, [name]: value }));
-  };
-
-  if (loading) return <p>Loading...</p>;
-  if (!garage) return <p>Garage not found.</p>;
+  if (!garage) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div>
-      <h1>Garage Details</h1>
-      {isEditing ? (
-        <div>
-          <Input name="name" value={garage.name} onChange={handleChange} />
-          <Input name="city" value={garage.city} onChange={handleChange} />
-          <Input
-            name="department"
-            value={garage.department}
-            onChange={handleChange}
-          />
-          <Button onClick={handleUpdate}>Save Changes</Button>
-          <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-        </div>
-      ) : (
-        <div>
-          <p>Name: {garage.name}</p>
-          <p>City: {garage.city}</p>
-          <p>Department: {garage.department}</p>
-          <p>Is Visible: {garage.isVisible ? "Yes" : "No"}</p>
-          <Button onClick={() => setIsEditing(true)}>Edit</Button>
-          <Button onClick={handleDelete}>Delete</Button>
-          <Button onClick={toggleVisibility}>
-            {garage.isVisible ? "Hide" : "Show"}
-          </Button>
-        </div>
-      )}
+      <Header />
+      <Card>
+        <CardHeader>
+          <CardTitle>Détails du Garage</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>
+            <strong>Nom:</strong> {garage.name}
+          </p>
+          <p>
+            <strong>Ville:</strong> {garage.city}
+          </p>
+          <p>
+            <strong>Departement:</strong> {garage.department}
+          </p>
+          <p>
+            <strong>Adresse:</strong> {garage.address}
+          </p>
+          <p>
+            <strong>Description:</strong> {garage.description}
+          </p>
+          <div>
+            <strong>Statut :</strong>
+            <select
+              value={garage.isActive ? "Actif" : "Inactif"}
+              onChange={handleActiveStatusChange}
+              className="ml-2 border rounded p-1"
+            >
+              <option value="Actif">Actif</option>
+              <option value="Inactif">Inactif</option>
+            </select>
+          </div>
+          <button
+            onClick={deleteGarage}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+          >
+            Supprimer
+          </button>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-export default GaragesDetails;
+export default GarageDetails;
