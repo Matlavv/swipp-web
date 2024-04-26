@@ -24,16 +24,29 @@ export const PhoneMockup = () => {
           <button className="px-3 py-1.5 flex gap-2 items-center rounded-xl outline outline-2">
             <div className="w-10">
               <Image
-                src="https://www.svgrepo.com/show/394180/google-play.svg"
+                src="/assets/google-play.svg"
                 alt="Get it on Google Play"
                 width={40}
                 height={40}
-                layout="fixed"
               />
             </div>
             <div>
               <div className="text-sm font-extrabold">Installer sur</div>
               <div className="text-2xl">Google Play</div>
+            </div>
+          </button>
+          <button className="px-3 py-1.5 flex gap-2 items-center rounded-xl outline outline-2 ml-4">
+            <div className="w-10">
+              <Image
+                src="/assets/apple.svg"
+                alt="Get it on Google Play"
+                width={40}
+                height={40}
+              />
+            </div>
+            <div>
+              <div className="text-sm font-extrabold">Installer sur</div>
+              <div className="text-2xl">Apple Store</div>
             </div>
           </button>
         </div>
