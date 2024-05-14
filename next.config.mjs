@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const nextConfig = {
+  output: "export",
   env: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN:
@@ -17,6 +18,9 @@ const nextConfig = {
     NEXT_PUBLIC_FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID:
       process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+  },
+  images: {
+    unoptimized: true,
   },
 };
 
