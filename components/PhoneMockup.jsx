@@ -18,7 +18,7 @@ export const PhoneMockup = () => {
         <h2 className="text-5xl md:text-7xl font-bold text-[#34469C]">
           de l&apos;automobile
         </h2>
-        <h5 className="mt-3 font-semibold w-2/3">
+        <h5 className="mt-3 font-semibold md:w-2/3">
           Swipp vous permet de réserver un créneau chez un garagiste partenaire
           et de planifier la livraison de carburant à domicile. Simplifiez votre
           vie automobile avec Swipp !
