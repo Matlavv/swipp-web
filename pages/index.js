@@ -1,6 +1,8 @@
 "use client";
 import { AboutSwipp } from "@/components/AboutSwipp";
+import Carte from "@/components/Carte";
 import Footer from "@/components/Footer";
+import Gallery from "@/components/Gallery";
 import Header from "@/components/Header";
 import { PhoneMockup } from "@/components/PhoneMockup";
 import ServiceList from "@/components/ServicesList";
@@ -13,6 +15,8 @@ export default function Home() {
       <PhoneMockup />
       <ServiceList />
       <AboutSwipp />
+      <Gallery />
+      <Carte />
       <TheyTrustUs />
       <Footer />
     </div>

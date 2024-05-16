@@ -1,6 +1,6 @@
 const ServiceList = () => {
   return (
-    <div className="flex flex-col items-center px-4 py-8">
+    <div className="flex flex-col items-center px-4 py-8 mb-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
         {/* Section Energies */}
         <div className="p-4 border-b md:border-r md:border-b-0 border-gray-300">
