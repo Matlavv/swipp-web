@@ -1,7 +1,10 @@
 const ServiceList = () => {
   return (
-    <div className="flex flex-col items-center px-4 py-8 mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl">
+    <div className="flex flex-col items-center px-4 py-8 mb-8 mt-2">
+      <h3 className="text-center text-xl font-semibold text-gray-500 mb-8">
+        Nos Services
+      </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-6xl mt-2">
         {/* Section Energies */}
         <div className="p-4 border-b md:border-r md:border-b-0 border-gray-300">
           <h2 className="text-2xl font-bold mb-4">1 / Energies</h2>
