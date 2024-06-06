@@ -32,8 +32,8 @@ export const AboutSwipp = () => {
             </h1>
             <h1 className="text-4xl text-[#B2FFFF] font-bold">En deux clics</h1>
             <p className="text-lg text-white mt-5 max-w-md">
-              Swipp vous permet de trouver un garage agréé en deux clics.
-              Réservez un rendez-vous pour votre véhicule en toute simplicité.
+              Swipp vous permet de trouver un garage agréé en deux clics. Prenez
+              rendez-vous pour votre véhicule en toute simplicité.
             </p>
           </div>
         </div>

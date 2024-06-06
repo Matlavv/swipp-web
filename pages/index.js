@@ -13,8 +13,8 @@ export default function Home() {
     <div>
       <Header />
       <PhoneMockup />
-      <ServiceList />
       <AboutSwipp />
+      <ServiceList />
       <Gallery />
       <Carte />
       <TheyTrustUs />

@@ -4,19 +4,19 @@ const Gallery = () => {
   const images = [
     "two_trucks",
     "repair_truck",
-    "truck_inside",
-    "two_trucks",
+    "swipp_inside",
+    "camion_swipp",
     "white_truck",
-    "camionette",
+    "garage",
   ];
 
   const texts = [
-    "Deux camions",
-    "Camion de réparation",
-    "Intérieur du camion",
-    "Deux camions",
-    "Camion blanc",
-    "Camionnette",
+    "Changements de pièces à domicile",
+    "L'entretien de votre véhicule à domicle",
+    "Livraison de carburant à domicile",
+    "Avec nos partenaires de confiance",
+    "Pour tout type de véhicule",
+    "Réparez votre véhicule auprès de nos garages partenaires",
   ];
 
   return (
@@ -38,7 +38,7 @@ const Gallery = () => {
                 />
               </div>
               <div className="absolute inset-0 bg-blue-500 opacity-0 group-hover:opacity-80 flex items-center justify-center transition-opacity rounded-lg">
-                <p className="text-white">{texts[index]}</p>
+                <p className="text-white text-center mx-4">{texts[index]}</p>
               </div>
             </div>
           ))}

@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="text-center">
-      <div className="container p-6 mx-auto">
+      <div className="container p-4 mx-auto">
         <div className="">
           <span className="flex items-center justify-center w-full">
             <span className="mr-4">Rejoignez-nous !</span>
@@ -16,11 +16,14 @@ export default function Footer() {
               <Link href="/JoinUsForm">Nous rejoindre</Link>
             </button>
           </span>
+          <span className="flex items-center justify-center w-full mt-4">
+            Contactez-nous au : 01 84 80 70 00
+          </span>
         </div>
       </div>
 
       {/* <!--Copyright section--> */}
-      <div className="flex p-4 items-center justify-center">
+      <div className="flex pb-4 items-center justify-center">
         <p> © 2024 Copyright : Swipp</p>
       </div>
     </footer>

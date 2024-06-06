@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export const PhoneMockup = () => {
   return (
-    <div className="flex flex-col md:flex-row justify-center md:justify-start items-center w-full">
+    <div className="flex flex-col md:flex-row justify-center md:justify-start items-center w-full -mt-14">
       <Image
         src="/assets/phone.png"
         alt="phone-mockup"
