@@ -7,6 +7,7 @@ import { db } from "../../../utils/firebaseConfig";
 
 const GarageDetails = () => {
   const [garage, setGarage] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { id } = router.query;
 
@@ -20,11 +21,29 @@ const GarageDetails = () => {
         } else {
           console.log("Garage not found");
         }
+        setIsLoading(false);
       }
     };
 
     fetchGarage();
   }, [id]);
+
+  // Fonction pour mettre à jour les champs du garage
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setGarage({ ...garage, [name]: value });
+  };
+
+  // Fonction pour enregistrer les modifications
+  const handleSaveChanges = async () => {
+    try {
+      await updateDoc(doc(db, "garages", id), garage);
+      alert("Les détails du garage ont été mis à jour !");
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des détails :", error);
+      alert("Échec de la mise à jour des détails du garage !");
+    }
+  };
 
   // Fonction pour changer le statut isActive
   const handleActiveStatusChange = async (event) => {
@@ -59,7 +78,7 @@ const GarageDetails = () => {
     }
   };
 
-  if (!garage) {
+  if (isLoading) {
     return <p>Loading...</p>;
   }
 
@@ -71,22 +90,66 @@ const GarageDetails = () => {
           <CardTitle>Détails du Garage</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>
-            <strong>Nom:</strong> {garage.name}
-          </p>
-          <p>
-            <strong>Ville:</strong> {garage.city}
-          </p>
-          <p>
-            <strong>Departement:</strong> {garage.department}
-          </p>
-          <p>
-            <strong>Adresse:</strong> {garage.address}
-          </p>
-          <p>
-            <strong>Description:</strong> {garage.description}
-          </p>
-          <div>
+          <div className="mb-4">
+            <label className="block mb-2">
+              <strong>Nom:</strong>
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={garage.name || ""}
+              onChange={handleChange}
+              className="w-full border rounded p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">
+              <strong>Ville:</strong>
+            </label>
+            <input
+              type="text"
+              name="city"
+              value={garage.city || ""}
+              onChange={handleChange}
+              className="w-full border rounded p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">
+              <strong>Departement:</strong>
+            </label>
+            <input
+              type="text"
+              name="department"
+              value={garage.department || ""}
+              onChange={handleChange}
+              className="w-full border rounded p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">
+              <strong>Adresse:</strong>
+            </label>
+            <input
+              type="text"
+              name="address"
+              value={garage.address || ""}
+              onChange={handleChange}
+              className="w-full border rounded p-2"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-2">
+              <strong>Description:</strong>
+            </label>
+            <textarea
+              name="description"
+              value={garage.description || ""}
+              onChange={handleChange}
+              className="w-full border rounded p-2"
+            />
+          </div>
+          <div className="mb-4">
             <strong>Statut :</strong>
             <select
               value={garage.isActive ? "Actif" : "Inactif"}
@@ -98,8 +161,14 @@ const GarageDetails = () => {
             </select>
           </div>
           <button
+            onClick={handleSaveChanges}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+          >
+            Enregistrer les modifications
+          </button>
+          <button
             onClick={deleteGarage}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 ml-2"
           >
             Supprimer
           </button>

@@ -16,6 +16,7 @@ const AddAGarage = () => {
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
+  const [siret, setSiret] = useState("");
 
   const handleSignUp = async () => {
     try {
@@ -30,7 +31,7 @@ const AddAGarage = () => {
       const defaultProfileImgUrl =
         "https://firebasestorage.googleapis.com/v0/b/swipp-b74be.appspot.com/o/profileImages%2FprofilePic.png?alt=media&token=34edfdcb-9114-45a4-b84f-bd9a22f92c57";
 
-      await setDoc(doc(db, "users", user.uid), {
+      const userData = {
         username,
         email,
         firstName,
@@ -40,6 +41,28 @@ const AddAGarage = () => {
         profileImageUrl: defaultProfileImgUrl,
         role: "garage",
         isActive: true,
+        siret,
+      };
+
+      // Ajouter dans la collection users
+      await setDoc(doc(db, "users", user.uid), userData);
+
+      // Ajouter dans la collection garages
+      await setDoc(doc(db, "garages", user.uid), {
+        userId: user.uid,
+        name: username + " Garage",
+        email,
+        phoneNumber,
+        siret,
+        createdAt: Timestamp.now(),
+        isActive: false,
+        address: "Adresse à modifier",
+        city: "Ville à modifier",
+        department: "Département à modifier",
+        description: "Description à modifier",
+        image: "",
+        workerCount: 0,
+        services: [],
       });
 
       // Réinitialisation des champs
@@ -49,6 +72,7 @@ const AddAGarage = () => {
       setFirstName("");
       setLastName("");
       setPhoneNumber("");
+      setSiret("");
 
       // Affichage du message de succès
       setMessage("Garage ajouté avec succès!");
@@ -100,6 +124,13 @@ const AddAGarage = () => {
         placeholder="Numéro de téléphone"
         value={phoneNumber}
         onChange={(e) => setPhoneNumber(e.target.value)}
+        className="mt-4"
+      />
+      <Input
+        type="number"
+        placeholder="Numéro de SIRET"
+        value={siret}
+        onChange={(e) => setSiret(e.target.value)}
         className="mt-4"
       />
       <Button
