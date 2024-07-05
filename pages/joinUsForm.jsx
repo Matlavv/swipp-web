@@ -128,11 +128,18 @@ export const JoinUsForm = () => {
             </span>
             {/* Liste des services à cocher, avec gestion des changements */}
             {[
-              "Entretien général",
-              "Service des pneus",
-              "Réparation des freins",
-              "Diagnostic électronique",
-              "Travaux de carrosserie",
+              "Suspension",
+              "Embrayage",
+              "Pièces moteur",
+              "Révisions et Vidanges",
+              "Distribution",
+              "Freinage",
+              "Echappement",
+              "Climatisation",
+              "Pneumatiques",
+              "Transmission",
+              "Carrosserie",
+              "Diagnostic",
             ].map((service, index) => (
               <label key={index} className="inline-flex items-center">
                 <input
