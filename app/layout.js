@@ -5,7 +5,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   return (
-    <div lang="en">
+    <div lang="fr">
       <div className={inter.className}>{children}</div>
     </div>
   );
