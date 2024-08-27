@@ -13,8 +13,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit,
-  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -38,15 +36,21 @@ const UpcomingReservations = () => {
       reservationsRef,
       where("garageId", "==", garageId),
       where("isActive", "==", true),
-      orderBy("bookingDate", "asc"),
-      limit(8)
+      where("cancelled", "==", false)
     );
 
     const querySnapshot = await getDocs(q);
     const reservationsWithDetails = await Promise.all(
       querySnapshot.docs.map(async (doc) => {
         const reservation = doc.data();
-        if (new Date(reservation.bookingDate.seconds * 1000) > new Date()) {
+
+        // Combiner bookingDate et bookingHour pour créer un objet Date complet
+        const bookingDateTime = new Date(
+          `${reservation.bookingDate}T${reservation.bookingHour}`
+        );
+
+        // Filtrer les réservations futures
+        if (bookingDateTime > new Date()) {
           const userDetails = await fetchUserDetails(reservation.userId);
           return {
             ...reservation,
@@ -56,13 +60,22 @@ const UpcomingReservations = () => {
             displayName: userDetails.firstName
               ? `${userDetails.firstName} ${userDetails.lastName}`
               : userDetails.username,
-            bookingDateString: formatDate(reservation.bookingDate),
+            bookingDateString: formatDate(bookingDateTime),
           };
         }
       })
     );
 
-    setReservations(reservationsWithDetails.filter(Boolean)); // Remove undefined entries caused by past dates
+    // Trier les réservations par date et heure les plus proches
+    const sortedReservations = reservationsWithDetails
+      .filter(Boolean)
+      .sort((a, b) => {
+        const dateA = new Date(`${a.bookingDate}T${a.bookingHour}`);
+        const dateB = new Date(`${b.bookingDate}T${b.bookingHour}`);
+        return dateA - dateB;
+      });
+
+    setReservations(sortedReservations);
   };
 
   const fetchUserDetails = async (userId) => {
@@ -70,11 +83,11 @@ const UpcomingReservations = () => {
     const userSnap = await getDoc(userRef);
     return userSnap.exists()
       ? userSnap.data()
-      : { username: "Unknown", email: "No email" };
+      : { username: "Inconnu", email: "Pas d'email" };
   };
 
-  const formatDate = (timestamp) => {
-    return timestamp.toDate().toLocaleString("fr-FR", {
+  const formatDate = (date) => {
+    return date.toLocaleString("fr-FR", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",

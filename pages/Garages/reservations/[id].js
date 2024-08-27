@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/utils/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../../../utils/firebaseConfig";
@@ -57,6 +57,34 @@ const DetailedReservation = () => {
 
   if (!reservation || !user) return <p>Loading...</p>;
 
+  // Combine bookingDate and bookingHour into a single Date object
+  const bookingDateTime = new Date(
+    `${reservation.bookingDate}T${reservation.bookingHour}`
+  );
+
+  const handleCancelReservation = async () => {
+    const confirmCancel = window.confirm(
+      "Voulez-vous vraiment annuler cette réservation ?"
+    );
+    if (!confirmCancel) {
+      return;
+    }
+
+    try {
+      const reservationRef = doc(db, "RepairBookings", id);
+      await updateDoc(reservationRef, {
+        cancelled: true,
+        isActive: false,
+        state: "Annulée",
+      });
+      alert("La réservation a été annulée avec succès.");
+      router.back(); // Redirige vers la page précédente après l'annulation
+    } catch (error) {
+      console.error("Erreur lors de l'annulation de la réservation:", error);
+      alert("Une erreur est survenue lors de l'annulation de la réservation.");
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -82,7 +110,13 @@ const DetailedReservation = () => {
               <p className="my-2">Détails : {reservation.reparationDetail}</p>
               <p className="my-2">
                 Date de réservation :{" "}
-                {reservation.bookingDate?.toDate().toLocaleString("fr-FR")}
+                {bookingDateTime.toLocaleString("fr-FR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
               <p className="my-2">Prix : {reservation.price} €</p>
             </div>
@@ -98,6 +132,12 @@ const DetailedReservation = () => {
               </div>
             )}
           </div>
+          <button
+            onClick={handleCancelReservation}
+            className="mt-4 bg-red-500 text-white py-2 px-4 rounded"
+          >
+            Annuler la réservation
+          </button>
         </CardContent>
       </Card>
     </div>

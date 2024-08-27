@@ -63,6 +63,23 @@ export default function GarageDashboard() {
               </Button>
             </CardHeader>
           </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Modifier vos disponibilités
+              </CardTitle>
+              <Button
+                asChild
+                size="sm"
+                className="ml-auto gap-1 bg-[#34469C] p-2"
+              >
+                <Link href="/Garages/ManageAvailabilities">
+                  Modifier
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+          </Card>
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
           <LastReservations />

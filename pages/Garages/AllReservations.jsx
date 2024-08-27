@@ -168,8 +168,14 @@ const AllReservations = () => {
                       href={`/Garages/reservations/${reservation.id}`}
                     >
                       {new Date(
-                        reservation.bookingDate.seconds * 1000
-                      ).toLocaleString("fr-FR")}
+                        `${reservation.bookingDate}T${reservation.bookingHour}`
+                      ).toLocaleString("fr-FR", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </Link>
                   </TableCell>
                   <TableCell>

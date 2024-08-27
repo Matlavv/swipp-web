@@ -183,7 +183,8 @@ const LastReservations = () => {
                       key={reservation.id}
                       href={`/Garages/reservations/${reservation.id}`}
                     >
-                      {formatDate(reservation.bookingDate)}
+                      {/* {formatDate(reservation.bookingDate)} */}
+                      {reservation.bookingDate}
                     </Link>
                   </TableCell>
                   <TableCell>

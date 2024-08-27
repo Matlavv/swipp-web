@@ -48,6 +48,7 @@ const AddAGarage = () => {
       await setDoc(doc(db, "users", user.uid), userData);
 
       // Ajouter dans la collection garages
+      const defaultAvailabilities = generateDefaultAvailabilities();
       await setDoc(doc(db, "garages", user.uid), {
         userId: user.uid,
         name: username + " Garage",
@@ -63,6 +64,7 @@ const AddAGarage = () => {
         image: "",
         workerCount: 0,
         services: [],
+        availabilities: defaultAvailabilities, // Ajouter les disponibilités par défaut
       });
 
       // Réinitialisation des champs
@@ -79,6 +81,24 @@ const AddAGarage = () => {
     } catch (error) {
       alert(`Failed to add garage: ${error.message}`);
     }
+  };
+
+  const generateDefaultAvailabilities = () => {
+    const availabilities = [];
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+    days.forEach((day) => {
+      const slots = [];
+      for (let hour = 9; hour < 18; hour++) {
+        slots.push(`${hour}:00`);
+      }
+      availabilities.push({
+        day,
+        slots,
+      });
+    });
+
+    return availabilities;
   };
 
   return (
